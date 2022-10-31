@@ -37,7 +37,7 @@
         {% endif %}
     </div>
     
-    <div id="content" class="container px-5">
+    <div id="content" class="container px-5 position-relative">
         <ul class="messages">
             {% for message in messages %}
             <li{% if message.tags %} class="{{ message.tags }} alert alert-success"{% endif %}>{{ message }}</li>
@@ -102,7 +102,7 @@
         </table>
 
         {% else %}
-        <div class="container w-75 shadow border-top border-primary rounded p-4 text-center">
+        <div class="container w-75 shadow border-top border-primary rounded p-4 text-center position-absolute top-50 start-50 translate-middle">
             <span>Não existem solicitações nessa categoria.</span>
         </div>
         {% endif %}
