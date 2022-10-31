@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 w-50">
+    <form id="form" method='post'>{% csrf_token %}
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h2 class="mb-3">Formulário de Solicitação de Curso Cead/UFJF</h2>
+            <p>Olá! Somos a equipe acadêmica do Cead.</p>
+            <p>Este formulário tem o objetivo de entender se sua demanda pode ser atendida pela equipe do Cead UFJF.</p>
+        </div>
+        
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h3 class="mb-3">Dados do Solicitante</h3>
+            <div class="d-flex gap-2 mb-2">
+                <div class="w-75">{{form.professor_responsavel.label}}:{{form.professor_responsavel}}</div>
+                <div class="w-25">{{form.siape.label}}:{{form.siape}}</div>
+            </div>
+            <div class="w-75 mb-2">{{form.email.label}}:{{form.email}}</div>
+        </div>
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h3 class="mb-3">Dados do Curso</h3>
+            <div class="d-flex gap-2 mb-3">
+                <div class="w-50">{{form.nome_curso.label}}:{{form.nome_curso}}</div>
+                <div class="w-50">{{form.unidade_lotacao.label}}:{{form.unidade_lotacao}}</div>
+            </div>
+            <div class="d-flex gap-2 mb-3 align-items-end">
+                <div class="w-25">{{form.tipo_curso.label}}:{{form.tipo_curso}}</div>
+                <div class="w-25">{{form.caracteristicas.label}}:{{form.caracteristicas}}</div>
+                <div class="w-25">{{form.qtd_disciplinas.label}}:{{form.qtd_disciplinas}}</div>
+            </div>
+            <div class="d-flex gap-2 mb-2 align-items-end">
+                <div class="w-25">{{form.inscricoes_inicio.label}}:{{form.inscricoes_inicio}}</div>
+                <div class="w-25">{{form.inscricoes_fim.label}}:{{form.inscricoes_fim}}</div>
+                <div class="w-25">{{form.curso_inicio.label}}:{{form.curso_inicio}}</div>
+                <div class="w-25">{{form.curso_fim.label}}:{{form.curso_fim}}</div>
+            </div>
+        </div>
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h3 class="mb-3">Quantidade de interlocutores envolvidos</h3>
+            
+            <div class="d-flex mb-3 gap-2">
+                <div class="w-25">{{form.professores.label}}:{{form.professores}}</div>
+                <div class="w-25">{{form.tutores.label}}:{{form.tutores}}</div>
+                <div class="w-25">{{form.alunos.label}}:{{form.alunos}}</div>
+                <div class="w-25">{{form.demais_colaboradores.label}}:{{form.demais_colaboradores}}</div>
+            </div>
+        </div>
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h3 class="mb-3">Detalhes Adicionais</h3>
+        
+            <div class="d-flex mb-3 gap-2 align-items-end">
+                <div class="w-25">{{form.criacao_AVA.label}}:{{form.criacao_AVA}}</div>
+                <div class="w-25">{{form.matricula_alunos.label}}:{{form.matricula_alunos}}</div>
+                <div class="w-50">{{form.capacitacao_interlocutores.label}}:{{form.capacitacao_interlocutores}}</div>
+            </div>
+            
+            <div class="d-flex mb-3 gap-2 align-items-end">
+                <div class="w-50">{{form.acessoria_comunicacao.label}}:{{form.acessoria_comunicacao}}</div>
+                <div class="w-50">{{form.producao_material.label}}:{{form.producao_material}}</div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="w-100">{{form.ambiente_pre_formatado.label}}<br><small class="text-muted">{{form.ambiente_pre_formatado.help_text}}</small></div>
+                <div class="w-25 text-center">{{form.ambiente_pre_formatado}}</div>
+            </div>
+            <div class="w-75 mb-3">{{form.outra.label}}:{{form.outra}}</div>
+            <div>
+                <div colspan="12" class="text-danger">
+                    <small>
+                        Obs.:
+                        <ul>
+                            <li>Caso necessário capacitação, fazer solicitação à equipe Pedagógica do CEAD</li>
+                            <li>Os guias para Banners de Disciplinas - Padrão CEAD/UFJF podem ser encondivados no <a href="http://www.cead.ufjf.br/sou-professor/banners-de-disciplinas-padrao/" target='_blank'>site do CEAD</a></li>
+                        </ul>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="mb-5 d-flex gap-2">
+            <button class="btn btn-primary px-3" type="submit">Enviar</button>
+            <a href="{% url 'index' %}" class="btn btn-secondary px-3">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('#form').find('input, select, textarea').each(function(){
+        if($(this).prop('required')){
+            $(this).before('<sup class="text-danger">*</sup>')
+        }
+    })
+</script>
+
+{% endblock %}

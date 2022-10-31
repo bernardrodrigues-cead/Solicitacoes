@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex">
+    <div id="sidebar" class="sidebar shadow">
+        {% if "Coordenação" in groups or user.is_superuser %}
+        <ul id="coordenacao_menu" class="list-group mt-5">
+            <li class="list-group-item active text-light"><strong>Coordenação</strong></li>
+            <li class="list-group-item {% if status == 'A' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'audiovisual-entrada-coordenacao' %}">Caixa de Entrada</a>
+                <span class="badge bg-primary pill">{{abertas|length}}</span>
+            </li>
+            <li class="list-group-item {% if status == 'P' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'audiovisual-pendentes-coordenacao' %}">Pendentes</a>
+                <span class="badge bg-primary pill">{{pendentes|length}}</span>
+            </li>
+            <li class="list-group-item {% if status == 'F' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'audiovisual-encerradas' %}">Encerradas</a>
+            </li>
+        </ul>
+        {% endif %}
+        
+        {% if "Produção" in groups or user.is_superuser %}
+        <ul id="producao_menu" class="list-group mt-3">                
+            <li class="list-group-item bg-primary text-light"><strong>Produção</strong></li>
+            <li class="list-group-item  {% if status == 'E' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'audiovisual-entrada-producao' %}">Caixa de Entrada</a>
+                <span class="badge bg-primary pill">{{em_andamento|length}}</span>
+            </li>
+            <li class="list-group-item  {% if status == 'F' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'audiovisual-encerradas' %}">Encerradas</a>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+    
+    <div id="content" class="container px-5">
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} alert alert-success"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        
+        <div class="d-flex justify-content-between align-items-center">
+            {% if "entrada" in request.path %}
+            <div class="d-flex align-items-center gap-2 pb-1 mt-5">
+                <img id="entrada" src="{% static 'assets/ENTRADA.png'%}"/>
+                <span class="display-6">Caixa de Entrada</span>
+            </div>
+            {% elif "pendentes" in request.path %}
+            <div class="d-flex align-items-center gap-2 pb-1 mt-5">
+                <img id="entrada" src="{% static 'assets/PENDENTE.png'%}"/>
+                <span class="display-6">Pendentes</span>
+            </div>
+            {% elif "encerradas" in request.path %}
+            <div class="d-flex align-items-center gap-2 pb-1 mt-5">
+                <img id="entrada" src="{% static 'assets/ENCERRADA.png'%}"/>
+                <span class="display-6">Encerradas</span>
+            </div>
+            {% endif %}
+            <form id="search-container" type="get">
+                <div class="mt-5 d-flex">
+                    <input id="search" name="filter" class="form-control" placeholder="Pesquisar"></input>
+                    <button id="search-button" class="btn btn-primary">
+                        <img src="{% static 'assets/search.svg'%}" />
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% if page_obj %}
+        <table class="table table-hover">
+            <thead>
+                <tr class="bg-primary text-light">
+                    <th>Data</th>
+                    <th>Setor/Curso</th>
+                    <th>Professor Responsável</th>
+                    <th class="text-end">Data de Abertura</th>
+                    <th class="text-center">Detalhes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for objeto in page_obj %}
+                <tr>
+                    <td>{{objeto.data_gravacao|date:'d/m/Y'}}</td>
+                    <td>{{objeto.setor_ou_curso}}</td>
+                    <td>{{objeto.professor_responsavel}}</td>
+                    <td class="text-end text-muted">{{objeto.data_abertura|date:'d/m/Y'}}</td>
+                    <td class="text-center">
+                        <a href="{% url 'audiovisual-avaliacao' objeto.id %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <div class="container w-75 shadow border-top border-primary rounded p-4 text-center">
+            <span>Não existem solicitações nessa categoria.</span>
+        </div>
+        {% endif %}
+
+        {% include 'includes/paginator.html' %}
+    </div>
+</div>
+{% endblock %}

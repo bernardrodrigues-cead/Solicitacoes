@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container w-75 mt-5">
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Dados do Solicitante</h3>
+        <div class="mb-2 w-100"><strong>Professor Responsável:</strong> {{solicitacao.professor_responsavel}}</div>
+        <div class="d-flex gap-2">
+            <div class="w-75"><strong>E-mail:</strong> {{solicitacao.email}}</div>
+            <div class="w-25"><strong>SIAPE:</strong> {{solicitacao.siape}}</div>
+        </div>
+    </div>
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Dados da Disciplina</h3>
+    
+
+        <div class="d-flex gap-2 mb-2">
+            <div class="w-75"><strong>Disciplina:</strong> {{solicitacao.nome_disciplina}}</div>
+            <div class="w-25"><strong>Código SIGA:</strong> {{solicitacao.codigo_siga}}</div>
+        </div>
+        <div class="d-flex gap-2 mb-2">
+            <div class="w-50"><strong>Curso:</strong> {{solicitacao.curso_disciplina}}</div>
+            <div class="w-50"><strong>Departamento:</strong> {{solicitacao.departamento_disciplina}}</div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class='w-25'><strong>Unidade de Lotação:</strong> {{solicitacao.unidade_lotacao}}</div>
+            <div class="w-50"><strong>Categoria:</strong> {{solicitacao.categoria}}</div>
+            <div class="w-25"><strong>Tipo de Curso:</strong> {{solicitacao.get_tipo_curso_display}}</div>
+        </div>
+    
+    </div>
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Dados Adicionais</h3>
+
+        <div class="d-flex gap-2 mb-2">
+            <div class="w-25"><strong>Início das Atividades:</strong> {{solicitacao.atividades_inicio|date:"d/m/Y"}}</div>
+            <div class="w-25"><strong>Fim das Atividades: </strong> {{solicitacao.atividades_fim|date:"d/m/Y"}}</div>
+            <div class="w-25"><strong>Modo de Inscrição:</strong> {{solicitacao.get_modo_inscricao_alunos_display}}</div>
+        </div>
+        <div class="d-flex gap-2 mb-2">
+            <div class="w-25"><strong>Ano:</strong> {{solicitacao.ano}}</div>
+            <div class="w-25"><strong>Semestre:</strong> {{solicitacao.semestre}}</div>
+            <div class="w-25"><strong>Turma(s):</strong> {{solicitacao.turma}}</div>
+        </div>
+        
+        <div class="d-flex gap-2 mb-2">
+            <div class="w-50">
+                <strong>Grupos:</strong> {% if solicitacao.grupos %}{{solicitacao.grupos}}{% else %}Não{% endif %}
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="w-50">
+                <strong>Importar conteúdo passado:</strong> {% if solicitacao.conteudo_passado %}{{solicitacao.conteudo_passado}}{% else %}Não{% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if solicitacao.mensagemdisciplina_set.all %}
+        {% for mensagem in solicitacao.mensagemdisciplina_set.all %}
+        <div id="mensagem-{{forloop.counter}}" class="p-3 mb-3 ms-3 bg-secondary text-light w-50 rounded">
+            <p class="text-end">
+                <span>Autor: <strong>{{mensagem.autor}}</strong></span> | 
+                <span>{{mensagem.data_criacao|date:"d/m/Y H:i"}}</span>
+            </p>
+            <p>
+                {{mensagem.mensagem}}
+            </p>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">{% csrf_token %}
+        {{form.mensagem}}
+
+        <div class="my-3 d-flex justify-content-between">
+            <div>
+                <button class="btn btn-success px-3" type="button" data-bs-toggle="modal" data-bs-target="#aprovarModal">Aprovar</button>
+                <button class="btn btn-danger px-3" type="button" data-bs-toggle="modal" data-bs-target="#reprovarModal">Reprovar</button>
+            </div>
+            
+            <button onclick="history.back()" type="button" class="btn btn-secondary px-3">Voltar</button>
+            
+        </div>
+
+        <div id="aprovarModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border border-success border-3">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Tem certeza que deseja <strong>APROVAR</strong> o pedido de 
+                            <strong>{{solicitacao.professor_responsavel}}</strong> 
+                            para criação da disciplina <strong>{{solicitacao.nome_disciplina}}</strong>?
+                        </p>
+                        <div class="d-flex gap-2">
+                            <button name="aprovar" class="btn btn-success px-3" type="submit" value="aprovar">Sim, aprovar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="reprovarModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border border-danger border-3">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Tem certeza que deseja <strong>REPROVAR</strong> o pedido de 
+                            <strong>{{solicitacao.professor_responsavel}}</strong> 
+                            para criação da disciplina <strong>{{solicitacao.nome_disciplina}}</strong>?
+                        </p>
+                        <div class="d-flex gap-2">
+                            <button name="reprovar" class="btn btn-danger px-3" type="submit" value="reprovar">Sim, reprovar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

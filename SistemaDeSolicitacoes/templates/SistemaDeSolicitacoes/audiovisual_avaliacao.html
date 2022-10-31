@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load filters %}
+
+<div class="container w-75 mt-5">
+
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Dados do Solicitante</h3>
+        <p><strong>Professor Responsável:</strong> {{solicitacao.professor_responsavel}}</p>
+        <p><strong>Curso/Setor:</strong> {{solicitacao.setor_ou_curso}}</p>
+        <div class="d-flex gap-2">
+            <div class="w-75"><strong>E-mail:</strong> {{solicitacao.email}}</div>
+            <div class="w-25"><strong>Telefone:</strong> {% if solicitacao.telefone %}{{solicitacao.telefone}}{% else %}---------------{% endif %}</div>
+        </div>
+    </div>
+
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Horário ideal</h3>
+        
+        <div class="d-flex gap-2 align-items-end">
+            <div class="w-25"><strong>Data da Gravação:</strong> {{solicitacao.data_gravacao|date:'d/m/Y'}}</div>
+            <div class="w-25"><strong>Horário da Gravação:</strong> {{solicitacao.hora_gravacao|date:'H:i'}}</div>
+            <div class="w-50"><strong>Duração Média:</strong> {% if solicitacao.duracao %}{{solicitacao.duracao}}{% else %}---------------{% endif %}</div>
+        </div>
+        
+    </div>
+
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Detalhes da gravação</h3>
+        
+        <div class="d-flex gap-4 align-items-end">
+            <div class="w-75"><strong>Breve Descrição:</strong> {{solicitacao.breve_descricao}}</div>
+            <div class="w-25"><strong>Equipamentos:</strong> {{solicitacao.equipamentos|unlist}}</div>
+        </div>
+    
+        <p>
+            <div class="d-flex gap-4 align-items-end">
+                <div class="w-75"><strong>Equipe:</strong> {{solicitacao.get_equipe_display}}</div>
+                <div class="w-25"><strong>Pessoas:</strong> {{solicitacao.pessoas}}</div>
+            </div>
+        </p>
+    </div>
+
+    {% if solicitacao.mensagemaudiovisual_set.all %}
+        {% for mensagem in solicitacao.mensagemaudiovisual_set.all %}
+        <div id="mensagem-{{forloop.counter}}" class="p-3 mb-3 ms-3 bg-secondary text-light w-50 rounded">
+            <p class="text-end">
+                <span>Autor: <strong>{{mensagem.autor}}</strong></span> | 
+                <span>{{mensagem.data_criacao|date:"d/m/Y H:i"}}</span>
+            </p>
+            <p>
+                {{mensagem.mensagem}}
+            </p>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">{% csrf_token %}
+        {{form.mensagem}}
+
+        <div class="my-3 d-flex justify-content-between">
+            <div>
+                <button class="btn btn-success px-3" type="button" data-bs-toggle="modal" data-bs-target="#aprovarModal">Aprovar</button>
+                <button class="btn btn-danger px-3" type="button" data-bs-toggle="modal" data-bs-target="#reprovarModal">Reprovar</button>
+            </div>
+            
+            <button onclick="history.back()" type="button" class="btn btn-secondary px-3">Voltar</button>
+            
+        </div>
+
+        <div id="aprovarModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border border-success border-3">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Tem certeza que deseja <strong>APROVAR</strong> o pedido de 
+                            <strong>{{solicitacao.professor_responsavel}}</strong> 
+                            para o curso/setor <strong>{{solicitacao.setor_ou_curso}}</strong>?
+                        </p>
+                        <div class="d-flex gap-2">
+                            <button name="aprovar" class="btn btn-success px-3" type="submit" value="aprovar">Sim, aprovar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="reprovarModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border border-danger border-3">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Tem certeza que deseja <strong>REPROVAR</strong> o pedido de 
+                            <strong>{{solicitacao.professor_responsavel}}</strong> 
+                            para o curso/setor <strong>{{solicitacao.setor_ou_curso}}</strong>?
+                        </p>
+                        <div class="d-flex gap-2">
+                            <button name="reprovar" class="btn btn-danger px-3" type="submit" value="reprovar">Sim, reprovar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

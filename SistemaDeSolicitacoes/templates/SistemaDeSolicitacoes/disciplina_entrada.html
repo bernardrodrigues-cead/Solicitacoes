@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex">
+    <div class="sidebar shadow">
+        {% if "Acadêmico" in groups or user.is_superuser %}
+        <ul id="academico_menu" class="list-group mt-5">
+            <li class="list-group-item active text-light"><span>Acadêmico</span></li>
+            <li class="list-group-item {% if status == 'A' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'disciplina-entrada-academico' %}">Caixa de Entrada</a>
+                <span class="badge bg-primary pill">{{abertas|length}}</span>
+            </li>
+            <li class="list-group-item {% if status == 'P' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'disciplina-pendentes-academico' %}">Pendentes</a>
+                <span class="badge bg-primary pill">{{pendentes|length}}</span>
+            </li>
+            <li class="list-group-item {% if status == 'F' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'disciplina-encerradas' %}">Encerradas</a>
+            </li>
+        </ul>
+        {% endif %}
+        
+        {% if "Suporte" in groups or user.is_superuser %}
+        <ul id="suporte_menu" class="list-group mt-3">                
+            <li class="list-group-item bg-primary text-light"><span>Suporte</span></li>
+            <li class="list-group-item  {% if status == 'E' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'disciplina-entrada-suporte' %}">Caixa de Entrada</a>
+                <span class="badge bg-primary pill">{{em_andamento|length}}</span>
+            </li>
+            <li class="list-group-item  {% if status == 'F' %} list-group-item-primary {% endif %} d-flex justify-content-between align-items-start list-group-item-action">
+                <a href="{% url 'disciplina-encerradas' %}">Encerradas</a>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+    <div class="container px-5">
+        <div class="d-flex justify-content-between align-items-center">
+            {% if "entrada" in request.path %}
+            <div class="d-flex align-items-center gap-2 pb-1 mt-5">
+                <img id="entrada" src="{% static 'assets/ENTRADA.png'%}"/>
+                <span class="display-6">Caixa de Entrada</span>
+            </div>
+            {% elif "pendentes" in request.path %}
+            <div class="d-flex align-items-center gap-2 pb-1 mt-5">
+                <img id="entrada" src="{% static 'assets/PENDENTE.png'%}"/>
+                <span class="display-6">Pendentes</span>
+            </div>
+            {% elif "encerradas" in request.path %}
+            <div class="d-flex align-items-center gap-2 pb-1 mt-5">
+                <img id="entrada" src="{% static 'assets/ENCERRADA.png'%}"/>
+                <span class="display-6">Encerradas</span>
+            </div>
+            {% endif %}
+            <form id="search-container" type="get">
+                <div class="mt-5 d-flex">
+                    <input id="search" name="filter" class="form-control" placeholder="Pesquisar"></input>
+                    <button id="search-button" class="btn btn-primary">
+                        <img src="{% static 'assets/search.svg'%}" />
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% if page_obj %}
+        <table class="table table-hover shadow">
+            <thead>
+                <tr class="bg-primary text-light">
+                    <th>Professor Responsável</th>
+                    <th>Disciplina</th>
+                    <th class="text-center">Data de Abertura</th>
+                    <th class="text-center">Detalhes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for objeto in page_obj %}
+                <tr>
+                    <td>{{objeto.professor_responsavel}}</td>
+                    <td>{{objeto.nome_disciplina}}</td>
+                    <td class="text-center">{{objeto.data_abertura|date:'d/m/Y'}}</td>
+                    <td class="text-center">
+                        <a href="{% url 'disciplina-avaliacao' objeto.id %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <div class="container w-75 shadow border-top border-primary rounded p-4 text-center">
+            <span>Não existem solicitações nessa categoria.</span>
+        </div>
+        {% endif %}
+
+        {% include 'includes/paginator.html' %}
+    </div>
+</div>
+
+{% endblock %}

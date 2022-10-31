@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container w-50 mt-5">
+    <div class="text-danger">
+        {{form.errors}}
+    </div>
+    <form id="form" method="post">{% csrf_token %}
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h2 class="mb-3">Formulário de Solicitação de Disciplina Cead/UFJF</h2>
+            <p>Olá! Somos a equipe Acadêmica do Cead.</p>
+            <p>Este formulário tem o objetivo de entender se sua demanda pode ser atendida pela equipe do Cead UFJF.</p>
+        </div>
+
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h2 class="mb-3">Dados do Solicitante</h2>
+            <p>{{form.professor_responsavel.label}}:{{form.professor_responsavel}}</p>
+            <div class="d-flex gap-2">
+                <div class="w-75">{{form.email.label}}:{{form.email}}</div>
+                <div class="w-25">{{form.siape.label}}:{{form.siape}}</div>
+            </div>
+        </div>
+
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h2 class="mb-3">Dados da Disciplina</h2>
+            
+
+            <div class="d-flex gap-2 mb-2">
+                <div class="w-75">{{form.nome_disciplina.label}}:{{form.nome_disciplina}}</div>
+                <div class="w-25">{{form.codigo_siga.label}}:{{form.codigo_siga}}</div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-2">
+                <div class="w-50">{{form.curso_disciplina.label}}:{{form.curso_disciplina}}</div>
+                <div class="w-50">{{form.departamento_disciplina.label}}:{{form.departamento_disciplina}}</div>
+            </div>
+
+            <p class="w-75">{{form.unidade_lotacao.label}}:{{form.unidade_lotacao}}</p>
+            <div class="d-flex gap-2">
+                <div class="w-75">{{form.categoria.label}}:{{form.categoria}}</div>
+                <div class="w-25">{{form.tipo_curso.label}}:{{form.tipo_curso}}</div>
+            </div>
+        </div>
+
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h2 class="mb-3">Dados Adicionais</h2>
+            <div class="d-flex gap-2 align-items-end mb-3">
+                <div class="w-25">{{form.atividades_inicio.label}}:{{form.atividades_inicio}}</div>
+                <div class="w-25">{{form.atividades_fim.label}}:{{form.atividades_fim}}</div>
+            </div>
+            <p class="w-75">{{form.modo_inscricao_alunos.label}}:{{form.modo_inscricao_alunos}}</p>
+            <div class="d-flex gap-2 mb-3">
+                <div class="w-25">{{form.ano.label}}:{{form.ano}}</div>
+                <div class="w-25">{{form.semestre.label}}:{{form.semestre}}</div>
+                <div class="w-25">{{form.turma.label}}:{{form.turma}}</div>
+            </div>
+            <div class="d-flex gap-2 align-items-end mb-3">
+                <div class="w-25">{{form.criar_grupos.label}} {{form.criar_grupos}}</div>
+                <div class="w-75">
+                    <small id="alerta" class="text-danger">
+                        Uma mesma disciplina do Moodle pode ser utilizada para várias turmas através de grupos (opção <strong>sim</strong>).
+                        Caso a opção escolhida seja <strong>não</strong>, serão criadas disciplinas separadas no Moodle para cada turma.<br>
+                        (Ex.: DIS034-2022.1-ABC)
+                    </small>
+                    {{form.grupos}}                
+                </div>
+            </div>
+            <div class="d-flex gap-2 align-items-end mb-2">
+                <div class="w-25">{{form.importar_conteudo_passado.label}} {{form.importar_conteudo_passado}}</div>
+                <div class="w-75">{{form.conteudo_passado}}</div>
+            </div>
+        </div>
+        <div class="mb-5 d-flex gap-2">
+            <button class="btn btn-primary px-3" type="submit">Enviar</button>
+            <a href="{% url 'index' %}" class="btn btn-secondary px-3">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('#id_criar_grupos').change(function(){
+        if($('#id_criar_grupos').val() == '1'){
+            $('#id_grupos').show()
+            $('#alerta').hide()
+        }else{
+            $('#id_grupos').hide()
+            $('#alerta').show()
+        }
+    })
+    $('#id_importar_conteudo_passado').change(function(){
+        if($('#id_importar_conteudo_passado').val() == '1'){
+            $('#id_conteudo_passado').show()
+        }else{
+            $('#id_conteudo_passado').hide()
+        }
+    })
+    $('#id_siape').mask('0000000')
+
+    $('#form').find('input, select, textarea').each(function(){
+        if($(this).prop('required')){
+            $(this).before('<sup class="text-danger">*</sup>')
+        }
+    })
+</script>
+
+{% endblock %}

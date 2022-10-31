@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+
+<div id="main-container" class="menu d-flex gap-5 justify-content-center">
+    <div class="menuItem my-5 h-100 rounded-3 overflow-hidden shadow">
+        <div class="imgContainer">
+            <img id="audiovisual-img" src="{% static 'assets/audiovisual.png' %}">
+        </div>
+        <div class="textContainer container px-5">
+            <h2 class="h2">SERVIÇOS AUDIOVISUAIS</h2>
+            <a class="btn btn-primary w-100 my-3" href="{% url 'audiovisual-create' %}">Solicitar</a>       
+            {% if "Produção" in groups or "Coordenação" in groups or user.is_superuser %}
+            <p class="text-center my-2">
+                <a class="listLink"
+                    href=
+                        {% if "Produção" in groups %}"{% url 'audiovisual-entrada-producao' %}"
+                        {% elif "Coordenação" in groups or user.is_superuser %}"{% url 'audiovisual-entrada-coordenacao' %}"
+                        {% endif %}>
+                    Lista de Solicitações
+                </a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="menuItem my-5 h-100 shadow rounded-3 overflow-hidden">
+        <div class="imgContainer">
+            <img id="disciplina-img" src="{% static 'assets/disciplina.png' %}">
+        </div>
+        <div class="textContainer container px-5">
+            <h2 class="h2">NOVA DISCIPLINA</h2>
+            <a class="btn btn-primary w-100 my-3" href="{% url 'disciplina-create' %}">Solicitar</a>
+            {% if "Suporte" in groups or "Acadêmico" in groups or user.is_superuser %}
+            <p class="text-center my-2">
+                <a class="listLink" 
+                    href=
+                        {% if "Suporte" in groups %}"{% url 'disciplina-entrada-suporte' %}"
+                        {% elif "Acadêmico" in groups or user.is_superuser %}"{% url 'disciplina-entrada-academico' %}"
+                        {% endif %}>
+                    Lista de Solicitações
+                </a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="menuItem my-5 h-100 shadow rounded-3 overflow-hidden">
+        <div class="imgContainer">
+            <img id="curso-img" src="{% static 'assets/curso.png' %}">
+        </div>
+        <div class="textContainer container px-5">
+            <h2 class="h2">CRIAR NOVO CURSO</h2>
+            <a class="btn btn-primary w-100 my-3" href="{% url 'curso-create' %}">Solicitar</a>
+            {% if "Suporte" in groups or "Acadêmico" in groups or user.is_superuser %}
+            <p class="text-center my-2">
+                <a class="listLink" 
+                    href=
+                        {% if "Suporte" in groups %}"{% url 'curso-entrada-suporte' %}"
+                        {% elif "Acadêmico" in groups or user.is_superuser %}"{% url 'curso-entrada-academico' %}"
+                        {% endif %}>
+                    Lista de Solicitações
+                </a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

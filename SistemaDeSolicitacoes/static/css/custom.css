@@ -1,0 +1,241 @@
+:root{
+    transition: font-size 0.3s;
+}
+
+*{
+    font-family: 'Roboto', sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: #ae1f25;
+    transition: color 0.3s;
+}
+
+a:hover{
+    color: #80161b;
+}
+
+strong{
+    font-weight: 500;
+}
+
+.logo{
+    height: 2rem;
+    width: auto;
+}
+
+.card{
+    width: 25rem;
+}
+
+table input{
+    width: 100%;
+}
+
+th{
+    font-weight: 500;
+}
+
+thead th:first-child{
+    border-radius: 10px 0 0 0;
+}
+
+thead th:last-child{
+    border-radius: 0 10px 0 0;
+}
+
+td:first-child, th:first-child{
+    padding-left: 1rem;
+}
+
+.custom_thead{
+    background-color: #ae1f25;
+}
+
+.sidebar{
+    height: calc(100vh - 3.75rem);
+    width: 22.5vw;
+    background-color: #f0f0f0;
+}
+
+
+.menu{
+    height: 37.5rem;
+    transition: height 0.3s, width 0.3s;
+}
+
+.menuItem{
+    font-family: 'Roboto', sans-serif;
+    width: 19.5rem;
+    background-image: url("../assets/amarelo.png");
+    background-repeat: no-repeat;
+    background-size: 135%;
+    background-position: 50% -13rem;
+    transition: background-size 0.5s, width 0.3s;
+}
+
+.menuItem img{
+    width: 115%;
+    transition: width 0.5s;
+}
+
+.menuItem:hover{
+    background-size: 150%;
+}
+
+.menuItem:hover img{
+    width: 120%;
+}
+
+.imgContainer{
+    height: 60%;
+}
+
+#disciplina-img, #curso-img{
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+.btn-primary{
+    background-color: #ae1f25;
+    border: solid #ae1f25 1px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active{
+    background-color: #80161b !important;
+    border: solid #ae1f25 1px !important;
+}
+
+.listLink{
+    color: #111111;
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+.listLink:hover, .listLink:active{
+    color: #ae1f25;
+}
+
+.border-primary{
+    border-color: #ae1f25 !important;
+}
+
+.list-group{
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    border-radius: 0
+}
+
+.list-group li:first-child{
+    border-top-width:0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 10px;
+    background-color:#ae1f25 !important;
+    border-color:#ae1f25
+}
+.list-group li:last-child{
+    border-bottom-width:0;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 0
+}
+
+.list-group-item-primary{
+    background-color:#ffe5e5;
+    transition: background-color 0.3s;
+}
+
+.list-group-item-primary:hover{
+    background-color:#ffd0d0 !important;
+}
+
+.bg-primary{
+    background-color: #ae1f25ff !important
+}
+
+#entrada{
+    height: 4rem;
+    width: auto;
+}
+
+#search-container{
+    width: 40%;
+}
+
+#search{
+    border-radius: 10px 0 0 10px !important;
+}
+
+#search-button{
+    border-radius: 0 10px 10px 0 !important;
+}
+
+@media only screen and (max-width: 1024px){
+    :root{
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 768px){
+    :root{
+        font-size: 11px;
+    }
+    
+    #main-container{
+        display: block !important;
+    }
+
+    .menuItem{
+        margin: auto;
+        display: flex;
+        align-items: center;
+        width: 30rem !important;
+        height: 15rem !important;
+        background-size: 100%;
+        background-position: -5rem -18rem;
+    }
+
+    .menuItem:hover{
+        background-size: 120%;
+    }
+
+    .imgContainer{
+        height: 80%;
+        width: auto;
+    }
+
+    .textContainer{
+        padding: 1rem !important;
+        text-align: right;
+    }
+
+    .textContainer a{
+        width: 75% !important;
+        padding: 0.75rem;
+    }
+
+    .textContainer p{
+        text-align: right !important;
+    }
+
+    #audiovisual-img, #disciplina-img, #curso-img{
+        height: 100%;
+        width: auto;
+        margin-left: 0;
+        transform: translateX(0);
+    }
+
+    #navbar{
+        display: inline-block !important;
+        padding: 0.75rem !important;
+        text-align: right;
+    }
+
+    #user-info{
+        justify-content: right;
+        margin-right: 1rem;
+    }
+}

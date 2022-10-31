@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CEAD - Sistema de Solicitações</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/cead_logo.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mask.js' %}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light shadow">
+        <div id="navbar" class="container-fluid d-flex align-items-center">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="{% static 'assets/cead_logo.png' %}" alt="Logo do CEAD" class="ms-2 logo d-inline-block align-text-center">
+                <span class="ms-2">CEAD | Sistema de Solicitações</span>
+            </a>
+            {% if not user.is_anonymous %}
+            <div id="user-info" class="d-flex gap-3">
+                <span>Usuário: {{user}}</span>
+                <a href="{% url 'logout' %}">Log Out</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+{% block content %}{% endblock %}
+
+</body>

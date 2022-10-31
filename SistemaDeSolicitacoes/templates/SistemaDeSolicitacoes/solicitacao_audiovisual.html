@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-sm w-50 mt-5">
+    <div class="text-danger">
+        {{form.errors}}
+    </div>
+    <form id="form" method="post">{% csrf_token %}
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h2 class="mb-3">Formulário de uso do estúdio Cead/UFJF</h2>
+            <p>Olá! Somos a equipe de Produção do Cead.</p>
+            <p>Trabalhamos com o apoio a professores da UFJF.</p>
+            <p>Este formulário tem o objetivo de entender se sua demanda pode ser atendida pela equipe do Cead UFJF.</p>
+            <p>Pelo menos um membro da equipe da Produção deverá acompanhar a gravação.</p>
+        </div>
+
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h3 class="mb-3">Dados do Solicitante</h3>
+            <p>{{form.professor_responsavel.label}}:{{form.professor_responsavel}}</p>
+            <p>{{form.setor_ou_curso.label}}:{{form.setor_ou_curso}}</p>
+            <p>
+                <div class="d-flex gap-2">
+                    <div class="w-75">{{form.email.label}}:{{form.email}}</div>
+                    <div class="w-25">{{form.telefone.label}}:{{form.telefone}}</div>
+                </div>
+            </p>
+        </div>
+
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h3 class="mb-3">Horário ideal</h3>
+            <p>O Cead funciona de segunda a sexta de 8h às 18h.</p>
+            <p>Qual dia seria ideal para agendar sua gravação?</p>
+            <p><small class="text-muted">(vamos verificar a disponibilidade e dar retorno via e-mail sobre o agendamento)</small></p>
+
+            
+            <div class="d-flex gap-2 align-items-end">
+                <div class="w-25">{{form.data_gravacao.label}}:{{form.data_gravacao}}</div>
+                <div class="w-25">{{form.hora_gravacao.label}}:{{form.hora_gravacao}}</div>
+                <div class="w-50">{{form.duracao.label}}:{{form.duracao}}</div>
+            </div>
+            
+        </div>
+
+        <div class="border-top rounded p-3 shadow border-primary mb-3">
+            <h3 class="mb-3">Detalhes da gravação</h3>
+            
+            <div class="d-flex gap-4 align-items-end">
+                <div class="w-75">{{form.breve_descricao.label}}:{{form.breve_descricao}}</div>
+                <div class="w-25">{{form.equipamentos.label}}:{{form.equipamentos}}</div>
+            </div>
+        
+            <p>
+                <div class="d-flex gap-4 align-items-end">
+                    <div class="w-75">{{form.equipe.label}}:{{form.equipe}}</div>
+                    <div class="w-25">{{form.pessoas.label}}:{{form.pessoas}}</div>
+                </div>
+            </p>
+        </div>
+        <div class="mb-5 d-flex gap-2">
+            <button class="btn btn-primary px-3" type="submit">Enviar</button>
+            <a href="{% url 'index' %}" class="btn btn-secondary px-3">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('#id_equipamentos').removeClass('form-check-input')
+    $('#id_equipamentos').addClass('form-check')
+    var PhoneMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+      },
+      Options = {
+        onKeyPress: function(val, e, field, options) {
+            field.mask(PhoneMaskBehavior.apply({}, arguments), options);
+          }
+      };
+    $('#id_telefone').mask(PhoneMaskBehavior, Options);
+    $('#id_duracao').mask('0:00');
+    $('#form').find('input, select, textarea').each(function(){
+        if($(this).prop('required')){
+            $(this).before('<sup class="text-danger">*</sup>')
+        }
+    })
+</script>
+
+{% endblock %}

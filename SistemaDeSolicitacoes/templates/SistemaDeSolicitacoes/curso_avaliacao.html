@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 w-75">
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Dados do Solicitante</h3>
+        <div class="d-flex gap-2 mb-2">
+            <div class="w-75"><strong>Professor Responsável: </strong>{{solicitacao.professor_responsavel}}</div>
+            <div class="w-25"><strong>SIAPE: </strong>{{solicitacao.siape}}</div>
+        </div>
+        <div class="w-75 mb-2"><strong>E-mail: </strong>{{solicitacao.email}}</div>
+    </div>
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Dados do Curso</h3>
+        <div class="d-flex gap-2 mb-3">
+            <div class="w-50"><strong>Nome do Curso: </strong>{{solicitacao.nome_curso}}</div>
+            <div class="w-50"><strong>Unidade de Lotação: </strong>{{solicitacao.unidade_lotacao}}</div>
+        </div>
+        <div class="d-flex gap-2 mb-3 align-items-end">
+            <div class="w-25"><strong>Tipo de Curso: </strong>{{solicitacao.get_tipo_curso_display}}</div>
+            <div class="w-25"><strong>Características: </strong>{{solicitacao.caracteristicas}}</div>
+            <div class="w-25"><strong>Quatidade de Disciplinas: </strong>{{solicitacao.qtd_disciplinas.label}}: {{solicitacao.qtd_disciplinas}}</div>
+        </div>
+        <div class="d-flex gap-2 mb-2 align-items-end">
+            <div class="w-25"><strong>Início das Inscrições: </strong>{{solicitacao.inscricoes_inicio|date:"d/m/Y"}}</div>
+            <div class="w-25"><strong>Fim das Inscrições: </strong>{{solicitacao.inscricoes_fim|date:"d/m/Y"}}</div>
+            <div class="w-25"><strong>Início do Curso: </strong>{{solicitacao.curso_inicio|date:"d/m/Y"}}</div>
+            <div class="w-25"><strong>Fim do Curso: </strong>{{solicitacao.curso_fim|date:"d/m/Y"}}</div>
+        </div>
+    </div>
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Quantidade de interlocutores envolvidos</h3>
+        
+        <div class="d-flex mb-3 gap-2">
+            <div class="w-25"><strong>Professores: </strong>{{solicitacao.professores}}</div>
+            <div class="w-25"><strong>Tutores: </strong>{{solicitacao.tutores}}</div>
+            <div class="w-25"><strong>Alunos: </strong>{{solicitacao.alunos}}</div>
+            <div class="w-25"><strong>Demais Colaboradores: </strong>{{solicitacao.demais_colaboradores}}</div>
+        </div>
+    </div>
+    <div class="border-top rounded p-3 shadow border-primary mb-3">
+        <h3 class="mb-3">Detalhes Adicionais</h3>
+    
+        <div class="d-flex mb-3 gap-2 align-items-end">
+            <div class="w-25"><strong>Criação de AVA: </strong>{% if solicitacao.criacao_AVA %}Sim{% else %}Não{% endif %}</div>
+            <div class="w-25"><strong>Matrícula de Alunos: </strong>{% if solicitacao.matricula_alunos %}Sim{% else %}Não{% endif %}</div>
+            <div class="w-50"><strong>Capacitação de Interlocutores: </strong>{% if solicitacao.capacitacao_interlocutores %}Sim{% else %}Não{% endif %}</div>
+        </div>
+        
+        <div class="d-flex mb-3 gap-2 align-items-end">
+            <div class="w-50"><strong>Acessoria de Comunicação: </strong>{% if solicitacao.acessoria_comunicacao %}Sim{% else %}Não{% endif %}</div>
+            <div class="w-50"><strong>Produção de Material: </strong>{% if solicitacao.producao_material %}Sim{% else %}Não{% endif %}</div>
+        </div>
+    
+        <div class="mb-3 w-50"><strong>Criação de ambiente pré-formatado: </strong>{% if solicitacao.ambiente_pre_formatado %}Sim{% else %}Não{% endif %}</div>
+
+        {% if solicitacao.outra %}<div class="w-75 mb-3"><strong>Outras solicitações: </strong>{{solicitacao.outra}}</div>{% endif %}
+    </div>
+
+    {% if solicitacao.mensagemcurso_set.all %}
+        {% for mensagem in solicitacao.mensagemcurso_set.all %}
+        <div id="mensagem-{{forloop.counter}}" class="p-3 mb-3 ms-3 bg-secondary text-light w-50 rounded">
+            <p class="text-end">
+                <span>Autor: <strong>{{mensagem.autor}}</strong></span> | 
+                <span>{{mensagem.data_criacao|date:"d/m/Y H:i"}}</span>
+            </p>
+            <p>
+                {{mensagem.mensagem}}
+            </p>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">{% csrf_token %}
+        {{form.mensagem}}
+
+        <div class="my-3 d-flex justify-content-between">
+            <div>
+                <button class="btn btn-success px-3" type="button" data-bs-toggle="modal" data-bs-target="#aprovarModal">Aprovar</button>
+                <button class="btn btn-danger px-3" type="button" data-bs-toggle="modal" data-bs-target="#reprovarModal">Reprovar</button>
+            </div>
+            
+            <button onclick="history.back()" type="button" class="btn btn-secondary px-3">Voltar</button>
+            
+        </div>
+
+        <div id="aprovarModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border border-success border-3">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Tem certeza que deseja <strong>APROVAR</strong> o pedido de 
+                            <strong>{{solicitacao.professor_responsavel}}</strong> 
+                            para criação do curso <strong>{{solicitacao.nome_curso}}</strong>?
+                        </p>
+                        <div class="d-flex gap-2">
+                            <button name="aprovar" class="btn btn-success px-3" type="submit" value="aprovar">Sim, aprovar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="reprovarModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border border-danger border-3">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Tem certeza que deseja <strong>REPROVAR</strong> o pedido de 
+                            <strong>{{solicitacao.professor_responsavel}}</strong> 
+                            para criação do curso <strong>{{solicitacao.nome_curso}}</strong>?
+                        </p>
+                        <div class="d-flex gap-2">
+                            <button name="reprovar" class="btn btn-danger px-3" type="submit" value="reprovar">Sim, reprovar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
